@@ -24,6 +24,22 @@ class SliderPanel(Panel):
         self.num_label.configure(text= f'{round(value, 2)}')
         
 class SegmentedPanel(Panel):
-    def __init__(self, parent):
+    def __init__(self, parent, text, data_var, options):
         super().__init__(parent=parent)
+        
+        ctk.CTkLabel(self, text=text).pack()
+        ctk.CTkSegmentedButton(self, variable=data_var ,values=options).pack(expand=True, fill='both', padx=4, pady=4)
+        
+class SwitchPanel(Panel):
+    def __init__(self, parent, *args):
+        super().__init__(parent=parent)
+        
+        for var, text in args:
+            switch = ctk.CTkSwitch(self, text=text, variable=var, button_color=BLUE, fg_color=SLIDER_BG)
+            switch.pack(side='left', expand=True, fill='both', padx=5, pady=10)
+            
+class DropDownPanel(ctk.CTkOptionMenu):
+    def __init__(self, parent, data_var, options):
+        super().__init__(master=parent, values=options, fg_color=DARK_GREY, button_color=DROPDOWN_MAIN_COLOR, button_hover_color=DROPDOWN_HOVER_COLOR, dropdown_fg_color=DROPDOWN_MENU_COLOR, variable=data_var)
+        self.pack(fill='x', pady=4)
         
