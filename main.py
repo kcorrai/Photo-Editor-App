@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from image_widgets import *
-from PIL import Image, ImageTk, ImageOps
+from PIL import Image, ImageTk, ImageOps, ImageEnhance, ImageFilter
 from menu import Menu
 
 class App(ctk.CTk):
@@ -56,10 +56,53 @@ class App(ctk.CTk):
         self.image = self.original
         
         # rotate
-        self.image = self.image.rotate(self.pos_vars['rotate'].get())
+        if self.pos_vars['rotate'].get() != ROTATE_DEFAULT:
+            self.image = self.image.rotate(self.pos_vars['rotate'].get())
         
         # zoom
-        self.image = ImageOps.crop(image=self.image, border=self.pos_vars['zoom'].get())
+        if self.pos_vars['zoom'].get():
+            self.image = ImageOps.crop(image=self.image, border=self.pos_vars['zoom'].get())
+        
+        # flip
+        if self.pos_vars['flip'].get() != FLIP_OPTIONS[0]:
+            if self.pos_vars['flip'].get() == 'X':
+                self.image = ImageOps.mirror(self.image)
+            if self.pos_vars['flip'].get() == 'Y':
+                self.image = ImageOps.flip(self.image)
+            if self.pos_vars['flip'].get() == 'Both':
+                self.image = ImageOps.mirror(self.image)
+                self.image = ImageOps.flip(self.image)
+            
+        # brightness and vibrance
+        if self.color_vars['brightness'].get() != BRIGHTNESS_DEFAULT:
+            brightness_enhancer = ImageEnhance.Brightness(self.image)
+            self.image = brightness_enhancer.enhance(self.color_vars['brightness'].get())
+        if self.color_vars['vibrance'].get() != VIBRANCE_DEFAULT:
+            vibrance_enhancer = ImageEnhance.Color(self.image)
+            self.image = vibrance_enhancer.enhance(self.color_vars['vibrance'].get())
+        
+        # grayscale and invert
+        if self.color_vars['grayscale'].get():
+            self.image = ImageOps.grayscale(self.image)
+            
+        if self.color_vars['invert'].get():
+            self.image = ImageOps.invert(self.image)
+            
+        # blur and contrast
+        if self.effect_vars['blur'].get() != BLUR_DEFAULT:
+            self.image = self.image.filter(ImageFilter.GaussianBlur(self.effect_vars['blur'].get()))
+        if self.effect_vars['contrast'].get() != CONTRAST_DEFAULT:
+            self.image = self.image.filter(ImageFilter.UnsharpMask(self.effect_vars['contrast'].get()))
+        
+        if self.effect_vars['effect'].get() == 'Emboss':
+            self.image = self.image.filter(ImageFilter.EMBOSS)
+        if self.effect_vars['effect'].get() == 'Find Edges':
+            self.image = self.image.filter(ImageFilter.FIND_EDGES)
+        if self.effect_vars['effect'].get() == 'Contour':
+            self.image = self.image.filter(ImageFilter.CONTOUR)
+        if self.effect_vars['effect'].get() == 'Edge enhance':
+            self.image = self.image.filter(ImageFilter.EDGE_ENHANCE_MORE)
+           
         
         self.place_image()
         
