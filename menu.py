@@ -25,6 +25,7 @@ class PositionFrame(ctk.CTkFrame):
         SliderPanel(self, 'Rotation', pos_vars['rotate'], 0, 360)
         SliderPanel(self, 'Zoom', pos_vars['zoom'], 0, 200)
         SegmentedPanel(self, 'Invert', pos_vars['flip'], FLIP_OPTIONS)
+        RevertButton(self, (pos_vars['rotate'], ROTATE_DEFAULT), (pos_vars['zoom'], ZOOM_DEFAULT), (pos_vars['flip'], FLIP_OPTIONS[0]))
         
 class ColorFrame(ctk.CTkFrame):
     def __init__(self, parent, color_vars):
@@ -34,6 +35,7 @@ class ColorFrame(ctk.CTkFrame):
         SwitchPanel(self, (color_vars['grayscale'], 'B/W'), (color_vars['invert'], 'Invert'))
         SliderPanel(self, 'Brightness', color_vars['brightness'], 0, 5)
         SliderPanel(self, 'Vibrance', color_vars['vibrance'], 0, 5)
+        RevertButton(self, (color_vars['grayscale'], GRAYSCALE_DEFAULT), (color_vars['brightness'], BRIGHTNESS_DEFAULT), (color_vars['vibrance'], VIBRANCE_DEFAULT), (color_vars['invert'], INVERT_DEFAULT))
         
 class EffectFrame(ctk.CTkFrame):
     def __init__(self, parent, effect_vars):
@@ -43,4 +45,5 @@ class EffectFrame(ctk.CTkFrame):
         DropDownPanel(self, effect_vars['effect'], EFFECT_OPTIONS)
         SliderPanel(self, 'Blur', effect_vars['blur'], 0, 30)
         SliderPanel(self, 'Contrast', effect_vars['contrast'], 0, 10)
+        RevertButton(self, (effect_vars['effect'], EFFECT_OPTIONS[0]), (effect_vars['blur'], BLUR_DEFAULT), (effect_vars['contrast'], CONTRAST_DEFAULT))
         

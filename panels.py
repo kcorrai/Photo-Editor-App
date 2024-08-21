@@ -14,14 +14,17 @@ class SliderPanel(Panel):
         self.rowconfigure((0,1), weight=1)
         self.columnconfigure((0,1), weight=1)
         
+        self.data_var = data_var
+        self.data_var.trace('w', self.update_text)
+        
         ctk.CTkLabel(self, text=text).grid(column=0, row=0, sticky='w', padx=5)
         self.num_label = ctk.CTkLabel(self, text=data_var.get())
         self.num_label.grid(column=1, row=0, sticky='e', padx=5)
         
-        ctk.CTkSlider(self, fg_color=SLIDER_BG, variable=data_var, from_=min_value, to=max_value, command=self.update_text).grid(row=1, column=0, columnspan=2, sticky='ew', pady=5)
+        ctk.CTkSlider(self, fg_color=SLIDER_BG, variable=self.data_var, from_=min_value, to=max_value, command=self.update_text).grid(row=1, column=0, columnspan=2, sticky='ew', pady=5)
 
-    def update_text(self, value):
-        self.num_label.configure(text= f'{round(value, 2)}')
+    def update_text(self, *args):
+        self.num_label.configure(text= f'{round(self.data_var.get(), 2)}')
         
 class SegmentedPanel(Panel):
     def __init__(self, parent, text, data_var, options):
@@ -42,4 +45,17 @@ class DropDownPanel(ctk.CTkOptionMenu):
     def __init__(self, parent, data_var, options):
         super().__init__(master=parent, values=options, fg_color=DARK_GREY, button_color=DROPDOWN_MAIN_COLOR, button_hover_color=DROPDOWN_HOVER_COLOR, dropdown_fg_color=DROPDOWN_MENU_COLOR, variable=data_var)
         self.pack(fill='x', pady=4)
+        
+class RevertButton(ctk.CTkButton):
+    def __init__(self, parent, *args):
+        super().__init__(master=parent, text="Revert", command=self.revert)
+        self.pack(side='bottom', pady=10)
+        self.args = args
+        
+    def revert(self):
+        for var, value in self.args:
+            var.set(value)
+            
+            
+            
         
